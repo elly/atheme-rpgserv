@@ -190,6 +190,28 @@ static void set_rating(sourceinfo_t *si, mychan_t *mc, char *value)
 	command_success_nodata(si, _("Rating for \2%s\2 set to \2%s\2."), mc->name, value);
 }
 
+static void set_system(sourceinfo_t *si, mychan_t *mc, char *value)
+{
+	char copy[512];
+	char *sp = NULL, *t = NULL;
+	static const char *systems[] = {
+		"charapproval", "diced", "sheeted"
+	};
+
+	strlcpy(copy, value, sizeof(copy));
+	t = strtok_r(copy, " ", &sp);
+	while (t) {
+		if (inlist(t, systems) < 0) {
+			command_fail(si, fault_badparams, _("\2%s\2 is not a valid system."), t);
+			return;
+		}
+		t = strtok_r(NULL, " ", &sp);
+	}
+
+	metadata_add(mc, "private:rpgserv:system", value);
+	command_success_nodata(si, _("system for \2%s\2 set to \2%s\2."), mc->name, value);
+}
+
 static void set_setting(sourceinfo_t *si, mychan_t *mc, char *value)
 {
 	metadata_add(mc, "private:rpgserv:setting", value);
@@ -216,6 +238,7 @@ static struct {
 	{ "period", set_period },
 	{ "ruleset", set_ruleset },
 	{ "rating", set_rating },
+	{ "system", set_system },
 	{ "setting", set_setting },
 	{ "storyline", set_storyline },
 	{ "summary", set_summary },

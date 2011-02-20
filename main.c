@@ -1,4 +1,7 @@
-/* main.c - rpgserv main() routine */
+/* main.c - rpgserv main() routine.
+ * Idea completely ripped off from irc.darkmyst.org rpgserv, but theirs is
+ * closed-source, so...
+ */
 
 #include "atheme.h"
 
